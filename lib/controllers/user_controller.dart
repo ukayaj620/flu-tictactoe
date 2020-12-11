@@ -48,10 +48,10 @@ class UserController {
         valueToBeUpdated = {'win': snapshot.value['win'] + 1};
         break;
       case 'lose':
-        valueToBeUpdated = {'win': snapshot.value['lose'] + 1};
+        valueToBeUpdated = {'lose': snapshot.value['lose'] + 1};
         break;
       case 'draw':
-        valueToBeUpdated = {'win': snapshot.value['draw'] + 1};
+        valueToBeUpdated = {'draw': snapshot.value['draw'] + 1};
         break;
     }
 
