@@ -23,7 +23,7 @@ class _GameScreenState extends State<GameScreen> {
   Map _game;
   StreamSubscription<Event> _gameStream;
 
-  String _hostNickName = '', _guestNickName= '';
+  String _hostNickName = '', _guestNickName = '';
   bool _isHost;
 
   @override
@@ -46,7 +46,7 @@ class _GameScreenState extends State<GameScreen> {
           'timestamp': value['timestamp'],
           'turn': value['turn']
         };
-        _isHost = _storage.getUID() == value['host'];
+        _isHost = (_storage.getUID() == value['host']) ?? false;
         print(_game);
       });
       _userController.getNickName(value['host']).then((value) {
@@ -73,10 +73,10 @@ class _GameScreenState extends State<GameScreen> {
 
   String _determineMessageToShow() {
     String go = 'Your Turn';
-    String wait = 'Waiting for your omponent';
-    if (_isHost && _game['turn'] == 'X') {
+    String wait = 'Waiting for your opponent';
+    if (_isHost == true && _game['turn'] == 'X') {
       return go;
-    } else if (!_isHost && _game['turn'] == 'O') {
+    } else if (_isHost == false && _game['turn'] == 'O') {
       return go;
     } else {
       return wait;
@@ -85,66 +85,59 @@ class _GameScreenState extends State<GameScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(0.0),
         child: AppBar(),
       ),
       body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  margin: EdgeInsets.symmetric(vertical: 16.0),
-                  child: Image.asset(
-                    'assets/icons/brand.png',
-                    width: 60.0,
-                  ),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                margin: EdgeInsets.symmetric(vertical: 16.0),
+                child: Image.asset(
+                  'assets/icons/brand.png',
+                  width: 60.0,
                 ),
-                SizedBox(width: 16.0),
-                Text(
-                  'Let\'s Play',
-                  style: Theme.of(context).textTheme.headline1,
-                )
-              ],
-            ),
-            SizedBox(height: 12.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                PlayerCard(
-                  name: _hostNickName,
-                  player: 'X',
-                ),
-                SizedBox(width: 8.0),
-                Text(
-                  'VS',
-                  style: Theme.of(context).textTheme.headline2.apply(
-                    fontWeightDelta: 2
-                  ),
-                ),
-                SizedBox(width: 8.0),
-                PlayerCard(
-                  name: _guestNickName,
-                  player: 'O',
-                ),
-              ]
-            ),
-            SizedBox(height: 16.0),
-            Text(
-              _determineMessageToShow(),
-              style: Theme.of(context).textTheme.headline2.apply(
-                  fontWeightDelta: 2
               ),
+              SizedBox(width: 16.0),
+              Text(
+                'Let\'s Play',
+                style: Theme.of(context).textTheme.headline1,
+              )
+            ],
+          ),
+          SizedBox(height: 12.0),
+          Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+            PlayerCard(
+              name: _hostNickName,
+              player: 'X',
             ),
-            SizedBox(height: 16.0),
-            Board()
-          ]
-        ),
+            SizedBox(width: 8.0),
+            Text(
+              'VS',
+              style: Theme.of(context)
+                  .textTheme
+                  .headline2
+                  .apply(fontWeightDelta: 2),
+            ),
+            SizedBox(width: 8.0),
+            PlayerCard(
+              name: _guestNickName,
+              player: 'O',
+            ),
+          ]),
+          SizedBox(height: 16.0),
+          Text(
+            _determineMessageToShow(),
+            style:
+                Theme.of(context).textTheme.headline2.apply(fontWeightDelta: 2),
+          ),
+          SizedBox(height: 16.0),
+          Board()
+        ]),
       ),
     );
   }

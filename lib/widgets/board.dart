@@ -34,7 +34,6 @@ class Cell extends StatelessWidget {
 }
 
 class Board extends StatefulWidget {
-
   @override
   _BoardState createState() => _BoardState();
 }
@@ -62,7 +61,7 @@ class _BoardState extends State<Board> {
       setState(() {
         _boardController.updateBoardState = value['boardState'];
         _uid = _storage.getUID();
-        _isHost = _storage.getUID() == value['host'];
+        _isHost = (_storage.getUID() == value['host']) ?? false;
         _turn = value['turn'];
         _code = value['code'];
         _showGameResult();
@@ -75,14 +74,14 @@ class _BoardState extends State<Board> {
 
   @override
   void dispose() {
-    _boardStream.cancel();
     super.dispose();
+    _boardStream.cancel();
   }
 
   bool _determineDisableCell() {
-    if (_isHost && _turn == 'X') {
+    if (_isHost == true && _turn == 'X') {
       return false;
-    } else if (!_isHost && _turn == 'O') {
+    } else if (_isHost == false && _turn == 'O') {
       return false;
     } else {
       return true;
@@ -90,53 +89,51 @@ class _BoardState extends State<Board> {
   }
 
   void _showGameResult() {
-    switch(_boardController.evaluateBoardState(_isHost ? 'X' : 'O')) {
+    switch (_boardController.evaluateBoardState(_isHost ? 'X' : 'O')) {
       case BoardStatus.WIN:
+        _boardStream.cancel();
+        _gameController.updateGamePlay(_code, _isHost, 'win');
+        _userController.updateUserGamePlay(_uid, 'win');
         showDialog(
             context: context,
-            builder: (context) => TheAlert(
+            builder: (ctx) => TheAlert(
                 title: 'Game Result',
                 content: 'It\'s a win. Congratulations!',
                 buttonText: 'Close',
                 onPressed: () {
-                  _gameController.updateGamePlay(_code, _isHost, 'win');
-                  _userController.updateUserGamePlay(_uid, 'win');
-                  Navigator.pushReplacementNamed(context, 'profile');
-                }
-            )
-        );
+                  Navigator.popUntil(context, (route) => route.isFirst);
+                  Navigator.pushNamed(context, 'profile');
+                }));
         break;
       case BoardStatus.LOSE:
+        _boardStream.cancel();
+        _gameController.updateGamePlay(_code, _isHost, 'lose');
+        _userController.updateUserGamePlay(_uid, 'lose');
         showDialog(
             context: context,
-            builder: (context) => TheAlert(
+            builder: (ctx) => TheAlert(
                 title: 'Game Result',
                 content: 'Haiya. You lose, so shame!',
                 buttonText: 'Close',
                 onPressed: () {
-                  Navigator.pop(context);
-                  _gameController.updateGamePlay(_code, _isHost, 'lose');
-                  _userController.updateUserGamePlay(_uid, 'lose');
-                  Navigator.pushReplacementNamed(context, 'profile');
-                }
-            )
-        );
+                  Navigator.popUntil(context, (route) => route.isFirst);
+                  Navigator.pushNamed(context, 'profile');
+                }));
         break;
       case BoardStatus.DRAW:
+        _boardStream.cancel();
+        _gameController.updateGamePlay(_code, _isHost, 'draw');
+        _userController.updateUserGamePlay(_uid, 'draw');
         showDialog(
             context: context,
-            builder: (context) => TheAlert(
+            builder: (ctx) => TheAlert(
                 title: 'Game Result',
                 content: 'It\'s a draw. Good Job!',
                 buttonText: 'Close',
                 onPressed: () {
-                  Navigator.pop(context);
-                  _gameController.updateGamePlay(_code, _isHost, 'draw');
-                  _userController.updateUserGamePlay(_uid, 'draw');
-                  Navigator.pushReplacementNamed(context, 'profile');
-                }
-            )
-        );
+                  Navigator.popUntil(context, (route) => route.isFirst);
+                  Navigator.pushNamed(context, 'profile');
+                }));
         break;
       case BoardStatus.PLAY:
         break;
@@ -173,23 +170,23 @@ class _BoardState extends State<Board> {
                             onTap: () {
                               if (_isHost && _turn == 'X') {
                                 setState(() {
-                                  _boardController.occupy(_turn, x: x, y: y);
+                                  if (_boardController.occupy(_turn,
+                                      x: x, y: y)) {
+                                    _gameController.updateBoardState(_code,
+                                        _boardController.boardStateJSON, 'O');
+                                  }
                                 });
                                 print(_boardController.boardState);
-                                _gameController.updateBoardState(
-                                    _code,
-                                    _boardController.boardStateJSON,
-                                    'O');
                               }
                               if (!_isHost && _turn == 'O') {
                                 setState(() {
-                                  _boardController.occupy(_turn, x: x, y: y);
+                                  if (_boardController.occupy(_turn,
+                                      x: x, y: y)) {
+                                    _gameController.updateBoardState(_code,
+                                        _boardController.boardStateJSON, 'X');
+                                  }
                                 });
                                 print(_boardController.boardState);
-                                _gameController.updateBoardState(
-                                    _code,
-                                    _boardController.boardStateJSON,
-                                    'X');
                               }
                             },
                           ),
