@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "539457370556",
+    "firebase_url": "https://flu-tic-tac-toe.firebaseio.com",
+    "project_id": "flu-tic-tac-toe",
+    "storage_bucket": "flu-tic-tac-toe.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:539457370556:android:59766c32f780a0715113b9",
+        "android_client_info": {
+          "package_name": "com.example.flu_tic_tac_toe"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "539457370556-dvdseo8kgsqqubdoo4mntumgo5tsgmci.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDeyI7NPY4_mUKS0_G1jEK6HkIg2ls1Kgk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "539457370556-dvdseo8kgsqqubdoo4mntumgo5tsgmci.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
