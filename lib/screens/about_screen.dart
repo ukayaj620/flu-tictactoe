@@ -60,7 +60,7 @@ class _AboutScreenState extends State<AboutScreen> {
                     ),
                     GestureDetector(
                       onTap: () async {
-                        const url = 'https://github.com/codenitiva/flu-tic-tac-toe';
+                        const url = 'https://github.com/ukayaj620/flu-tictactoe';
                         if (await canLaunch(url)) {
                           await launch(
                             url,
