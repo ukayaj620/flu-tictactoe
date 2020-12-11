@@ -78,12 +78,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            Button(
-                              text: 'View History',
-                              onPressed: () {
-                                print('see history');
-                              },
-                            ),
                             SizedBox(height: 16.0),
                             Button(
                               text: 'Log Out',
