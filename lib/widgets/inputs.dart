@@ -5,12 +5,16 @@ class Input extends StatefulWidget {
   final String Function(String) validator;
   final bool secure;
   final String leftIcon;
+  final String type;
+  final Function onChanged;
 
   Input({
     @required this.onSaved,
     @required this.validator,
     this.secure = false,
     this.leftIcon = '',
+    this.type = '',
+    this.onChanged
   });
 
   @override
@@ -67,7 +71,8 @@ class _InputState extends State<Input> {
               ),
               obscureText: widget.secure ? _isToggle : false,
               onSaved: widget.onSaved,
-              validator: widget.validator
+              validator: widget.validator,
+              onChanged: widget.type == 'search' ? widget.onChanged : null
             ),
           ),
           widget.secure

@@ -23,6 +23,7 @@ class _JoinGameScreenState extends State<JoinGameScreen> {
   LobbyController _lobbyController;
   GameController _gameController;
   List _lobbies = [];
+  List _filteredLobbies = [];
   Map<String, User> _users = {};
   String _uid = '';
   StreamSubscription<Event> _lobbyStream;
@@ -41,6 +42,7 @@ class _JoinGameScreenState extends State<JoinGameScreen> {
             .where((lobby) => lobby.value['guest'] == null &&
               lobby.value['host'] != _uid)
             .toList();
+        _filteredLobbies = _lobbies;
       });
     });
   }
@@ -81,16 +83,25 @@ class _JoinGameScreenState extends State<JoinGameScreen> {
                 onSaved: (value) => value,
                 validator: (value) => value,
                 leftIcon: 'search',
+                type: 'search',
+                onChanged: (string) {
+                  setState(() {
+                    _filteredLobbies = _lobbies
+                        .where((lobby) =>
+                          lobby.value['code'].toString().contains(string))
+                        .toList();
+                  });
+                },
               ),
             ),
             SizedBox(height: 24.0),
             Expanded(
               child: ListView.builder(
-                itemCount: _lobbies.length,
+                itemCount: _filteredLobbies.length,
                 padding: EdgeInsets.symmetric(horizontal: 16.0),
                 itemBuilder: (context, index) {
-                  final code = _lobbies[index].key;
-                  final hostUid = _lobbies[index].value['host'];
+                  final code = _filteredLobbies[index].key;
+                  final hostUid = _filteredLobbies[index].value['host'];
                   if (_users[code] == null) {
                     _lobbyController.getUserData(hostUid).then((user) {
                       print(user);
