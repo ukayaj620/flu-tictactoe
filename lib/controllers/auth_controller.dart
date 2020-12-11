@@ -59,16 +59,22 @@ class AuthController {
     DatabaseReference usersRef = FirebaseDatabase.instance
         .reference()
         .child('users/${userCredential.user.uid}');
-    usersRef.set({
-      'name': userCredential.user.displayName,
-      'nickname':
+
+    DataSnapshot snapshot = await usersRef.once();
+
+    if (snapshot.value == null) {
+      usersRef.set({
+        'name': userCredential.user.displayName,
+        'nickname':
         userCredential.user.displayName.substring(0, 5).toLowerCase() +
             _random.generateNumber(3).toString(),
-      'email': userCredential.user.email,
-      'win': 0,
-      'lose': 0,
-      'draw': 0,
-    });
+        'email': userCredential.user.email,
+        'win': 0,
+        'lose': 0,
+        'draw': 0,
+      });
+    }
+
     await _storage.setUID(userCredential.user.uid);
     return true;
   }
